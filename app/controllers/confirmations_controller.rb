@@ -12,7 +12,7 @@ class ConfirmationsController < ApplicationController
       end
     
       def edit
-        @user = User.find_signed(params[:confirmation_token], purpose: :confirm_email)
+       if @user.present? && @user.unconfirmed_or_reconfirming?
     
         if @user.present?
           @user.confirm!
@@ -21,6 +21,7 @@ class ConfirmationsController < ApplicationController
         else
           redirect_to new_confirmation_path, alert: "Invalid token."
         end
+       end
       end
     
       def new
